@@ -49,10 +49,8 @@ def parse_yandex_forms_payload(raw: bytes) -> dict | None:
     try:
         text = raw.decode("utf-8").strip()
 
-        # 1️⃣ снимаем escape-слой: \" \uXXXX \n
         unescaped = codecs.decode(text, "unicode_escape")
 
-        # 2️⃣ теперь это нормальный JSON
         data = json.loads(unescaped)
 
         return data

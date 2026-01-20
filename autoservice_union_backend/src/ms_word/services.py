@@ -166,11 +166,15 @@ class MSWordManager:
             director_name = values.full_name
             director_position = ""
 
+        try:
+            registration_date = values.tax_registration_date.strftime("%d-%m-%Y")
+        except AttributeError:
+            registration_date = ""
         replace_values = {
             "{{full_name}}": values.full_name,
             "{{company_name}}": company_name,
             "{{company_short_name}}": company_short_name,
-            "{{registration_date}}": values.tax_registration_date.strftime("%d-%m-%Y"),
+            "{{registration_date}}": registration_date,
             "{{legal_address}}": values.legal_address,
             "{{actual_address}}": values.actual_address,
             "{{mailing_address}}": values.mailing_address,
