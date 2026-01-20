@@ -1,3 +1,4 @@
+import codecs
 import json
 import os
 import re
@@ -41,6 +42,23 @@ def parse_maybe_double_json(raw: bytes) -> dict | None:
 
     except Exception:
         logger.exception("Failed to parse payload")
+        return None
+
+
+def parse_yandex_forms_payload(raw: bytes) -> dict | None:
+    try:
+        text = raw.decode("utf-8").strip()
+
+        # 1️⃣ снимаем escape-слой: \" \uXXXX \n
+        unescaped = codecs.decode(text, "unicode_escape")
+
+        # 2️⃣ теперь это нормальный JSON
+        data = json.loads(unescaped)
+
+        return data
+
+    except Exception:
+        logger.exception("Failed to parse Yandex Forms payload")
         return None
 
 async def process_data(data: Any):
