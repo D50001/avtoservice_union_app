@@ -8,7 +8,7 @@ from starlette.requests import Request
 from logger import logger
 from starlette.responses import JSONResponse
 
-from .services import fix_bad_json, process_data
+from .services import parse_maybe_double_json, process_data
 
 
 
@@ -19,17 +19,19 @@ router = APIRouter(
 
 
 @router.post("/")
-async def create_member(
-    request: Request
-):
+async def create_member(request: Request):
+    background_task = None
+
     try:
-        data = await request.body()
-        logger.info(f"Received data: {data}")
-        text = data.decode("utf-8")
-        j = json.loads(text)
-        background_task =  BackgroundTask(process_data, j)
+        raw = await request.body()
+        logger.info("Received raw data: %r", raw)
+
+        payload = parse_maybe_double_json(raw)
+
+        if payload is not None:
+            background_task = BackgroundTask(process_data, payload)
+
     except Exception as e:
-        logger.error(e)
-        background_task = None
-    finally:
-        return JSONResponse({"ok": True}, background=background_task)
+        logger.exception(f"Unexpected error {e}")
+
+    return JSONResponse({"ok": True}, status_code=200, background=background_task)

@@ -1,3 +1,4 @@
+import json
 import os
 import re
 from typing import Any
@@ -26,6 +27,21 @@ def fix_bad_json(bad_json_bytes):
 
     return fixed_json_str
 
+
+def parse_maybe_double_json(raw: bytes) -> dict | None:
+    try:
+        text = raw.decode("utf-8").strip()
+        data = json.loads(text)
+
+        # если после первого loads это строка — грузим ещё раз
+        if isinstance(data, str):
+            data = json.loads(data)
+
+        return data
+
+    except Exception:
+        logger.exception("Failed to parse payload")
+        return None
 
 async def process_data(data: Any):
     data_type = detect_form_type(data)
