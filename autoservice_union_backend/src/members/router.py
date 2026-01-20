@@ -25,7 +25,8 @@ async def create_member(
     try:
         data = await request.body()
         logger.info(f"Received data: {data}")
-        j = json.loads(fix_bad_json(data))
+        text = data.decode("utf-8")
+        j = json.loads(text)
         background_task =  BackgroundTask(process_data, j)
     except Exception as e:
         logger.error(e)
