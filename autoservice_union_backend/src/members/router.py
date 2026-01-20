@@ -24,10 +24,11 @@ async def create_member(
 ):
     try:
         data = await request.body()
+        logger.info(f"Received data: {data}")
         j = json.loads(fix_bad_json(data))
         background_task =  BackgroundTask(process_data, j)
     except Exception as e:
-        logger.info(e)
+        logger.error(e)
         background_task = None
     finally:
         return JSONResponse({"ok": True}, background=background_task)
