@@ -98,6 +98,12 @@ class MSWordManager:
                 correspondent_account="",
                 bik=""
             )
+
+        try:
+            registration_date = values.tax_registration_date.strftime("%d-%m-%Y")
+        except AttributeError:
+            registration_date = ""
+
         replace_values = {
             "{{full_name}}": values.full_name,
             "{{company_name}}": values.company_name,
@@ -106,7 +112,7 @@ class MSWordManager:
             "{{director_position}}": values.director_position,
             "{{director_full_name}}": values.director_full_name,
             "{{registration_address}}": values.registration_address,
-            "{{registration_date}}": values.registration_date.strftime("%Y-%m-%d"),
+            "{{registration_date}}": registration_date,
             "{{company_inn}}": values.company_inn,
             "{{ogrnip}}": values.ogrnip,
             "{{okved_codes}}": values.okved_codes,
