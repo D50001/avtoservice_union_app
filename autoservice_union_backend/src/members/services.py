@@ -46,13 +46,17 @@ def parse_maybe_double_json(raw: bytes) -> dict | None:
 
 
 def parse_yandex_forms_payload(raw: bytes) -> dict | None:
+    text = raw.decode("utf-8").strip()
     try:
-        text = raw.decode("utf-8").strip()
+        data = json.loads(text)
+        if isinstance(data, dict):
+            return data
+    except json.JSONDecodeError as e:
+        logger.debug("Failed to parse JSON from payload")
 
+    try:
         unescaped = codecs.decode(text, "unicode_escape")
-
         data = json.loads(unescaped)
-
         return data
 
     except Exception:

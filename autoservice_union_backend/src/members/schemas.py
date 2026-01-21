@@ -52,7 +52,7 @@ class AutoServiceUnionForm(BaseModel):
 
     bank_details: Optional[BankDetails] = Field(None, exclude=True)  # exclude=True, чтобы не искать его в исходном JSON
     locations: Optional[str] = Field(None, alias="В каких городах и населенных пунктах работает ваше предприятие")
-    employee_count: Optional[int] = Field(None, alias="Среднесписочная численность организации")
+    employee_count: Optional[str] = Field(None, alias="Среднесписочная численность организации")
     service_points_count: Optional[str] = Field(None, alias="Количество сервисов и ремонтных постов в каждом из них")
     service_zones_photos: Optional[HttpUrl] = Field(None, alias="Приложите фотографии: ремонтной зоны, зону приёмки...")
     facilities: Optional[str] = Field(None, alias="Имеете ли при сервисе, даже если это не ваш бизнес:")
@@ -74,9 +74,10 @@ class AutoServiceUnionForm(BaseModel):
                                                  alias="Какова цель участия в Союзе автосервисов вас / вашей организации")
     interested_services: Optional[str] = Field(None, alias="В каких услугах Вы заинтересованы:")
     can_help_with: Optional[str] = Field(None, alias="Чем можете быть полезны...")
-    recommended_partners: Optional[str] = Field(None,
-                                                alias="Кого бы Вы рекомендовали в качестве добросовестного партнера...")
-
+    recommended_partners: Optional[str] = Field(
+        None,
+        alias="Кого бы Вы рекомендовали в качестве добросовестного партнера..."
+    )
     consent_to_personal_data_processing: Optional[str] = Field(None, alias="Даю свое согласие на обработку персональных данных")
     data_accuracy_confirmation: Optional[str] = Field(None, alias="Достоверность данных подтверждаю")
     submission_date: str = Field(..., alias="Дата заполнения регистрационной формы")
